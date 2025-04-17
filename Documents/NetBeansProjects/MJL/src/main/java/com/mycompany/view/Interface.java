@@ -4,37 +4,107 @@
  */
 package com.mycompany.view;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Map;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
-/**
- *
- * @author wbweb
- */
+ 
+
 public class Interface extends javax.swing.JFrame {
 
-    /**
-     * Creates new form NewJFrame
-     */
-    public Interface() {//jTextArea1.setEditable(false); DESPUES DE CARGAR TEXTO
-        initComponents();
-        jTextArea1.setLineWrap(true);  
-        jTextArea1.setWrapStyleWord(true);  
+    public Interface() {/////////////////////////////___C_O_N_S_T_R_U_C_T_O_R___
+        
+    initComponents(); // Inicializa los componentes generados por NetBeans
+    setLocationRelativeTo(null); // Centra la ventana
+    setWelcomePanel(); 
+    /*resizePanels();*/
+     
+    
+    }
+    
+//******************************************************************************MÉTODOS USO INTERNO*********** 
+    
+    private void setWelcomePanel() {
+    
+    jPanel_welcome.setLayout(new BorderLayout());
+    
+    JLabel welcomeLine1 = new JLabel("Bienvenid@ a mi laboratorio de Java");
+    welcomeLine1.setHorizontalAlignment(SwingConstants.CENTER);
+    welcomeLine1.setFont(new Font("Arial", Font.BOLD, 36));
+    welcomeLine1.setForeground(Color.WHITE);/**********************************/
+    JLabel welcomeLine2 = new JLabel("Pincha para entrar");
+    welcomeLine2.setHorizontalAlignment(SwingConstants.CENTER);
+    welcomeLine2.setFont(new Font("Arial", Font.ITALIC, 20));
+    welcomeLine2.setForeground(Color.WHITE);
 
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+    JPanel textContainer = new JPanel(new GridLayout(2, 1));
+    textContainer.setOpaque(false); // Fondo transparente
+    textContainer.add(welcomeLine1);
+    textContainer.add(welcomeLine2);
+    jPanel_welcome.add(textContainer, BorderLayout.CENTER);
+    
+    getContentPane().setComponentZOrder(jPanel_welcome, 0);//subirlo en el ejeZ
+    revalidate();
+    repaint();
+    
+    //////////////////////////////////////////////////////////////Comportamiento
+    
+    this.addComponentListener(new ComponentAdapter() {
+    @Override
+        public void componentResized(ComponentEvent e) {
+            jPanel_welcome.setBounds(0, 0, getWidth(), getHeight());
+            revalidate();
+            repaint();
+        }
+    });
+    
+    jPanel_welcome.addMouseListener(new MouseAdapter() {
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        getContentPane().remove(jPanel_welcome); 
+        revalidate();
+        repaint();
+    }
+});
 
     }
+    
+   
+    
+    ///////////////////////////////////////////////////////////////////////////////
+//******************************************************************************METODOS USO EXTERNO*********
+    ///////////////////////////////////////////////////////////////////////////////
 
     
-    public void updateUI(Map<String, Object> attributes) {
-    System.out.println("🔍 Datos recibidos en updateUI(): " + attributes);
-    jLabel_title.setText((String) attributes.get("nombre")); // Actualiza el título
-}
-/*
-    public void updateUI(Map<String, Object> attributes) {
-    jLabel_title.setText((String) attributes.get("nombre")); // Actualiza el título con el valor del reto
-    jTextArea1.setText(attributes.get("descripcion").toString()); // Muestra la descripción del reto
+    
+    public void updateDates(Map<String, Object> attributes) {
+    
+    jLabel_title.setText((String) attributes.get("nombre"));
+    jLabel1.setText((String) attributes.get("descripcion"));
+
+    }   
+    
+    
+    public void generateButtons(int num){
+        for(int i = 1; i <= num; i++){
+            JButton button = new JButton("Reto " + (i));
+            jPanel_index.add(button);
+        }
+        revalidate();
+        repaint();
     }
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -48,9 +118,9 @@ public class Interface extends javax.swing.JFrame {
         jPanel_index = new javax.swing.JPanel();
         jPanel_head = new javax.swing.JPanel();
         jLabel_title = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
         jPanel_app = new javax.swing.JPanel();
+        jPanel_welcome = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("My Java Lab");
@@ -73,41 +143,56 @@ public class Interface extends javax.swing.JFrame {
         jLabel_title.setFont(new java.awt.Font("Bauhaus 93", 0, 36)); // NOI18N
         jLabel_title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        jTextArea1.setBackground(new java.awt.Color(255, 204, 153));
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Bauhaus 93", 0, 18)); // NOI18N
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
         javax.swing.GroupLayout jPanel_headLayout = new javax.swing.GroupLayout(jPanel_head);
         jPanel_head.setLayout(jPanel_headLayout);
         jPanel_headLayout.setHorizontalGroup(
             jPanel_headLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_headLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel_title, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel_headLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel_title, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 885, Short.MAX_VALUE)
         );
         jPanel_headLayout.setVerticalGroup(
             jPanel_headLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_headLayout.createSequentialGroup()
                 .addComponent(jLabel_title, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jPanel_app.setBackground(new java.awt.Color(255, 255, 204));
+
+        jPanel_welcome.setBackground(new java.awt.Color(255, 204, 102));
+
+        javax.swing.GroupLayout jPanel_welcomeLayout = new javax.swing.GroupLayout(jPanel_welcome);
+        jPanel_welcome.setLayout(jPanel_welcomeLayout);
+        jPanel_welcomeLayout.setHorizontalGroup(
+            jPanel_welcomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel_welcomeLayout.setVerticalGroup(
+            jPanel_welcomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 68, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout jPanel_appLayout = new javax.swing.GroupLayout(jPanel_app);
         jPanel_app.setLayout(jPanel_appLayout);
         jPanel_appLayout.setHorizontalGroup(
             jPanel_appLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_appLayout.createSequentialGroup()
+                .addContainerGap(464, Short.MAX_VALUE)
+                .addComponent(jPanel_welcome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(315, 315, 315))
         );
         jPanel_appLayout.setVerticalGroup(
             jPanel_appLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 456, Short.MAX_VALUE)
+            .addGroup(jPanel_appLayout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addComponent(jPanel_welcome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(304, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -115,7 +200,7 @@ public class Interface extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel_app, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel_head, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -125,15 +210,15 @@ public class Interface extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jPanel_index, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel_head, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel_app, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -178,11 +263,11 @@ public class Interface extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel_title;
     private javax.swing.JPanel jPanel_app;
     private javax.swing.JPanel jPanel_head;
     private javax.swing.JPanel jPanel_index;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JPanel jPanel_welcome;
     // End of variables declaration//GEN-END:variables
 }

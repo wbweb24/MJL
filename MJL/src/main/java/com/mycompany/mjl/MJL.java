@@ -16,7 +16,9 @@ public class MJL {
             ui.setVisible(true); // Muestra la interfaz
         
         // 💡 Enviar los valores iniciales de Challenge al iniciar
-            ui.updateUI(challenge.getAttributes());
+            ui.generateButtons(challenge.getChallengeCount());
+            ui.updateDates(challenge.getAttributes());
+            
             
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "⚠ Ha ocurrido un error inesperado:\n" + e.getMessage(),

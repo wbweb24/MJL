@@ -11,6 +11,7 @@ import java.util.List;
 public class ConnectionDB { 
     private MongoClient mongoClient;
     private MongoDatabase database;
+    public int totalRetos;
     
 
     public ConnectionDB() {
@@ -24,8 +25,14 @@ public class ConnectionDB {
         }
     }
 
-    public List<Document> getAllRetos() {
+    public List<Document> getRetos() {
         MongoCollection<Document> collection = database.getCollection("retos");
+        totalRetos = (int)collection.countDocuments();
         return collection.find().into(new ArrayList<>());
+        
     }
+    
+    
+
+
 }

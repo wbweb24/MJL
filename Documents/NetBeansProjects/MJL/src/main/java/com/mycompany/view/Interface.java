@@ -6,6 +6,8 @@ package com.mycompany.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ComponentAdapter;
@@ -13,9 +15,12 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Map;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
 
  
@@ -27,7 +32,12 @@ public class Interface extends javax.swing.JFrame {
     initComponents(); // Inicializa los componentes generados por NetBeans
     setLocationRelativeTo(null); // Centra la ventana
     setWelcomePanel(); 
-    /*resizePanels();*/
+    
+    resizePanels();
+    
+
+    
+    
      
     
     }
@@ -79,7 +89,30 @@ public class Interface extends javax.swing.JFrame {
 
     }
     
-   
+    private void resizePanels() {
+    // División vertical 
+    JSplitPane verticalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jPanel_head, jPanel_app);
+    verticalSplit.setResizeWeight(0.5); // Crecimiento proporcional
+    
+
+    // División horizontal 
+    JSplitPane mainSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, verticalSplit, jPanel_index);
+    mainSplit.setDividerLocation(0.7); 
+    mainSplit.setResizeWeight(0.7); // Crecimiento proporcional
+    mainSplit.setContinuousLayout(true); 
+
+    
+    getContentPane().setLayout(new BorderLayout());
+    getContentPane().add(mainSplit, BorderLayout.CENTER);
+
+    
+    revalidate();
+    repaint();
+}
+ 
+    
+    
+    
     
     ///////////////////////////////////////////////////////////////////////////////
 //******************************************************************************METODOS USO EXTERNO*********
@@ -95,15 +128,48 @@ public class Interface extends javax.swing.JFrame {
     }   
     
     
-    public void generateButtons(int num){
+    /*public void generateButtons(int num){
         for(int i = 1; i <= num; i++){
             JButton button = new JButton("Reto " + (i));
             jPanel_index.add(button);
+            button.setPreferredSize(new Dimension(80, 30)); // Ancho: 80px, Alto: 30px
+            
         }
-        revalidate();
-        repaint();
+        jPanel_index.setLayout(new GridLayout(0, 1)); // Una columna con múltiples filas
+        jPanel_index.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        jPanel_index.revalidate();
+        jPanel_index.repaint();
+        
+    }*/
+    public void generateButtons(int num) {
+    jPanel_index.setLayout(new BoxLayout(jPanel_index, BoxLayout.Y_AXIS)); // Organización vertical
+
+    int panelWidth = jPanel_index.getWidth();
+    int buttonWidth = (int) (panelWidth * 0.60); // Botón ocupará el 60% del panel
+
+    for (int i = 1; i <= num; i++) {
+        JButton button = new JButton("Reto " + i);
+        button.setPreferredSize(new Dimension(buttonWidth, 40)); // Tamaño del botón
+        button.setMaximumSize(new Dimension(buttonWidth, 40)); // Evita que se expanda más
+        button.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrado en el panel
+        
+        jPanel_index.add(Box.createRigidArea(new Dimension(0, 15)));
+        jPanel_index.add(new Box.Filler(
+        new Dimension(0, 5),  // Tamaño mínimo
+        new Dimension(0, 10),  // Tamaño preferido
+        new Dimension(0, 20)   // Tamaño máximo
+        ));
+
+        jPanel_index.add(button);
     }
 
+    jPanel_index.revalidate();
+    jPanel_index.repaint();
+}
+
+        
+    
 
 
     /**

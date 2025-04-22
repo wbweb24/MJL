@@ -7,13 +7,13 @@ import org.bson.Document;
 
 public class Challenge {
     private List<Document> challenges;
-    private int challengeCount;
+    
     private Map<String, Object> attributes; // Cambio de String a Object para evitar conversión y problemas de compatibilidad
 
     // Constructor, toma la lista pasada por parámetro, cuenta el numero de retos y establece el map de atributos con los valores del primer reto
     public Challenge(List<Document> challenges) {
         this.challenges = challenges;
-        this.challengeCount = challenges.size();
+        
         this.attributes = new HashMap<>(challenges.get(0));
         }
     
@@ -25,9 +25,7 @@ public class Challenge {
     }*/
     
 //GETTERS
-    public int getChallengeCount() {
-        return challengeCount;
-    }
+    
 
     public Map<String, Object> getAttributes() {
         return attributes;

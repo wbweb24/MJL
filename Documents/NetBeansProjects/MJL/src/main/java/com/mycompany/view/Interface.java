@@ -15,24 +15,31 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Map;
+import java.util.Random;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
  
 
 public class Interface extends javax.swing.JFrame {
+    
+    private int newIndex;
 
     public Interface() {/////////////////////////////___C_O_N_S_T_R_U_C_T_O_R___
         
     initComponents(); // Inicializa los componentes generados por NetBeans
     setLocationRelativeTo(null); // Centra la ventana
+  
     setWelcomePanel(); 
-    
+
     resizePanels();
     
 
@@ -154,23 +161,123 @@ public class Interface extends javax.swing.JFrame {
         button.setMaximumSize(new Dimension(buttonWidth, 40)); // Evita que se expanda más
         button.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrado en el panel
         
+        button.addActionListener(e -> {
+            newIndex = Integer.parseInt(button.getText().replaceAll("\\D", "")) - 1;
+            firePropertyChange("newIndexChanged", false, true);
+        });
+      
         jPanel_index.add(Box.createRigidArea(new Dimension(0, 15)));
         jPanel_index.add(new Box.Filler(
         new Dimension(0, 5),  // Tamaño mínimo
         new Dimension(0, 10),  // Tamaño preferido
         new Dimension(0, 20)   // Tamaño máximo
         ));
-
+        
         jPanel_index.add(button);
     }
+    
+    
+}
+    
+    public int getNewIndex() {
+    return newIndex;
+}
+    
+    
+public void executeMiniApp() {
+    // Limpiar el panel antes de agregar la miniapp
+    jPanel_app.removeAll();
+    jPanel_app.setLayout(new BorderLayout());
 
-    jPanel_index.revalidate();
-    jPanel_index.repaint();
+    // Leyenda "Valores añadidos" con color cálido
+    JLabel valoresLabel = new JLabel("Valores añadidos:");
+    valoresLabel.setFont(new Font("Arial", Font.BOLD, 16));
+    valoresLabel.setForeground(new Color(255, 140, 0)); // Naranja cálido
+
+    // Label para mostrar los valores añadidos, simulando un array
+    JLabel valoresAñadidosDisplay = new JLabel("[]"); // Inicialmente vacío
+    valoresAñadidosDisplay.setFont(new Font("Arial", Font.BOLD, 14));
+    valoresAñadidosDisplay.setForeground(new Color(255, 69, 0)); // Rojo cálido
+
+    // Panel para organizar los labels arriba
+    JPanel valoresPanel = new JPanel();
+    valoresPanel.setLayout(new GridLayout(2, 1));
+    valoresPanel.add(valoresLabel);
+    valoresPanel.add(valoresAñadidosDisplay);
+
+    // Panel inferior: entrada de datos
+    JPanel panelInferior = new JPanel(new GridLayout(4, 2, 5, 5));
+    JTextField[] ventasFields = new JTextField[8];
+    double[] ventas = new double[8];
+
+    for (int i = 0; i < ventasFields.length; i++) {
+        ventasFields[i] = new JTextField(10);
+        panelInferior.add(new JLabel("Venta " + (i + 1) + ":"));
+        panelInferior.add(ventasFields[i]);
+    }
+
+    // Botones
+    JPanel panelBotones = new JPanel();
+    JButton enviarBtn = new JButton("ENVIAR");
+    JButton limpiarBtn = new JButton("LIMPIAR");
+    JButton aleatorioBtn = new JButton("VALORES ALEATORIOS");
+
+    panelBotones.add(enviarBtn);
+    panelBotones.add(limpiarBtn);
+    panelBotones.add(aleatorioBtn);
+
+    // Funcionalidad de los botones
+    enviarBtn.addActionListener(e -> {
+        StringBuilder valoresArray = new StringBuilder("[ ");
+        for (int i = 0; i < ventasFields.length; i++) {
+            try {
+                ventas[i] = Double.parseDouble(ventasFields[i].getText());
+                valoresArray.append(ventas[i]).append(" ");
+            } catch (NumberFormatException ex) {
+                valoresArray.append("X "); // Representa valores inválidos
+            }
+        }
+        valoresArray.append("]");
+        valoresAñadidosDisplay.setText(valoresArray.toString());
+    });
+
+    limpiarBtn.addActionListener(e -> {
+        for (JTextField field : ventasFields) {
+            field.setText("");
+        }
+        valoresAñadidosDisplay.setText("[]");
+    });
+
+    aleatorioBtn.addActionListener(e -> {
+        Random rand = new Random();
+        for (int i = 0; i < ventasFields.length; i++) {
+            if (ventasFields[i].getText().isEmpty()) {
+                ventasFields[i].setText(String.valueOf(rand.nextInt(5000)));
+            }
+        }
+    });
+
+    // Agregar todo a `jPanel_app`
+    jPanel_app.add(valoresPanel, BorderLayout.NORTH);
+    jPanel_app.add(panelInferior, BorderLayout.CENTER);
+    jPanel_app.add(panelBotones, BorderLayout.SOUTH);
+
+    /* Refrescar la vista
+    jPanel_app.revalidate();
+    jPanel_app.repaint();*/
 }
 
-        
-    
 
+
+
+    
+    
+    
+    
+    
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

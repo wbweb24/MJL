@@ -21,6 +21,15 @@ public class MJL {
             ui.generateButtons(connection.totalRetos);
             
             
+            ui.addPropertyChangeListener("newIndexChanged", evt -> {
+                challenge.updateChallenge(ui.getNewIndex());
+                ui.updateDates(challenge.getAttributes());
+                System.out.println(ui.getNewIndex());
+                
+                
+            });
+            ui.revalidate();
+            ui.repaint();
 
             
             

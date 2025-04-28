@@ -1,13 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.mycompany.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ComponentAdapter;
@@ -21,9 +18,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -134,21 +129,6 @@ public class Interface extends javax.swing.JFrame {
 
     }   
     
-    
-    /*public void generateButtons(int num){
-        for(int i = 1; i <= num; i++){
-            JButton button = new JButton("Reto " + (i));
-            jPanel_index.add(button);
-            button.setPreferredSize(new Dimension(80, 30)); // Ancho: 80px, Alto: 30px
-            
-        }
-        jPanel_index.setLayout(new GridLayout(0, 1)); // Una columna con múltiples filas
-        jPanel_index.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-        jPanel_index.revalidate();
-        jPanel_index.repaint();
-        
-    }*/
     public void generateButtons(int num) {
     jPanel_index.setLayout(new BoxLayout(jPanel_index, BoxLayout.Y_AXIS)); // Organización vertical
 
@@ -165,8 +145,8 @@ public class Interface extends javax.swing.JFrame {
             newIndex = Integer.parseInt(button.getText().replaceAll("\\D", "")) - 1;
             firePropertyChange("newIndexChanged", false, true);
         });
-      
-        jPanel_index.add(Box.createRigidArea(new Dimension(0, 15)));
+      /*********************************************************************************REVISAR CIMENSIONS*/
+        jPanel_index.add(Box.createRigidArea(new Dimension(0, 10)));
         jPanel_index.add(new Box.Filler(
         new Dimension(0, 5),  // Tamaño mínimo
         new Dimension(0, 10),  // Tamaño preferido
@@ -183,89 +163,104 @@ public class Interface extends javax.swing.JFrame {
     return newIndex;
 }
     
+    public void executeMiniApp() {
     
-public void executeMiniApp() {
-    // Limpiar el panel antes de agregar la miniapp
     jPanel_app.removeAll();
     jPanel_app.setLayout(new BorderLayout());
 
-    // Leyenda "Valores añadidos" con color cálido
-    JLabel valoresLabel = new JLabel("Valores añadidos:");
-    valoresLabel.setFont(new Font("Arial", Font.BOLD, 16));
-    valoresLabel.setForeground(new Color(255, 140, 0)); // Naranja cálido
+   /* --------------- SECCIÓN SUPERIOR: TÍTULO Y ÁREA DE VISUALIZACIÓN --------------- */
+    JLabel titleLabel = new JLabel("Valores añadidos al Arreglo:");
+    titleLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
+    titleLabel.setForeground(new Color(255, 140, 0)); 
 
-    // Label para mostrar los valores añadidos, simulando un array
-    JLabel valoresAñadidosDisplay = new JLabel("[]"); // Inicialmente vacío
-    valoresAñadidosDisplay.setFont(new Font("Arial", Font.BOLD, 14));
-    valoresAñadidosDisplay.setForeground(new Color(255, 69, 0)); // Rojo cálido
+    
+    JLabel valuesDisplay = new JLabel("[]");
+    valuesDisplay.setFont(new Font("Arial", Font.BOLD, 22)); 
+    valuesDisplay.setForeground(new Color(255, 140, 0)); 
 
-    // Panel para organizar los labels arriba
-    JPanel valoresPanel = new JPanel();
-    valoresPanel.setLayout(new GridLayout(2, 1));
-    valoresPanel.add(valoresLabel);
-    valoresPanel.add(valoresAñadidosDisplay);
+    
+    JPanel valuesPanel = new JPanel();
+    valuesPanel.setLayout(new BoxLayout(valuesPanel, BoxLayout.Y_AXIS));
+    valuesPanel.setPreferredSize(new Dimension(valuesPanel.getWidth(), 120));
+    valuesPanel.setOpaque(false); // Hace el panel transparente
+    valuesPanel.add(titleLabel);
+    valuesPanel.add(valuesDisplay);
 
-    // Panel inferior: entrada de datos
-    JPanel panelInferior = new JPanel(new GridLayout(4, 2, 5, 5));
-    JTextField[] ventasFields = new JTextField[8];
-    double[] ventas = new double[8];
+     /* --------------- SECCIÓN CENTRAL: CAMPOS DE ENTRADA DE DATOS --------------- */
+    JPanel inputPanel = new JPanel(new GridLayout(4, 2, 5, 5));
+    inputPanel.setOpaque(false);
+    
+    JTextField[] salesFields = new JTextField[8];
+    double[] sales = new double[8];
 
-    for (int i = 0; i < ventasFields.length; i++) {
-        ventasFields[i] = new JTextField(10);
-        panelInferior.add(new JLabel("Venta " + (i + 1) + ":"));
-        panelInferior.add(ventasFields[i]);
+    for (int i = 0; i < salesFields.length; i++) {
+        JLabel salesLabel = new JLabel("Venta " + (i + 1) + ":");
+        salesLabel.setOpaque(false);
+        
+        
+
+        salesFields[i] = new JTextField(4); 
+        inputPanel.add(salesLabel);
+        inputPanel.add(salesFields[i]);
     }
 
-    // Botones
-    JPanel panelBotones = new JPanel();
-    JButton enviarBtn = new JButton("ENVIAR");
-    JButton limpiarBtn = new JButton("LIMPIAR");
-    JButton aleatorioBtn = new JButton("VALORES ALEATORIOS");
+    /* --------------- SECCIÓN INFERIOR: BOTONES DE ACCIÓN --------------- */
+    JPanel panelButtons = new JPanel();
+    panelButtons.setOpaque(false);
+    panelButtons.setPreferredSize(new Dimension(valuesPanel.getWidth(), 70));
+    JButton submitBtn = new JButton("Enviar");
+    JButton clearBtn = new JButton("Limpiar");
+    JButton randomBtn = new JButton("Valores aleatorios");
+    panelButtons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20)); // Centra los botones
 
-    panelBotones.add(enviarBtn);
-    panelBotones.add(limpiarBtn);
-    panelBotones.add(aleatorioBtn);
 
-    // Funcionalidad de los botones
-    enviarBtn.addActionListener(e -> {
-        StringBuilder valoresArray = new StringBuilder("[ ");
-        for (int i = 0; i < ventasFields.length; i++) {
+    panelButtons.add(submitBtn);
+    panelButtons.add(clearBtn);
+    panelButtons.add(randomBtn);
+
+    /* --------------- FUNCIONALIDAD DE LOS BOTONES --------------- */
+    submitBtn.addActionListener(e -> {
+        StringBuilder valuesArray = new StringBuilder("[ ");
+        for (int i = 0; i < salesFields.length; i++) {
             try {
-                ventas[i] = Double.parseDouble(ventasFields[i].getText());
-                valoresArray.append(ventas[i]).append(" ");
+                sales[i] = Double.parseDouble(salesFields[i].getText());
+                valuesArray.append(sales[i]).append(" ");
             } catch (NumberFormatException ex) {
-                valoresArray.append("X "); // Representa valores inválidos
+                valuesArray.append("X "); // Representa valores inválidos
             }
         }
-        valoresArray.append("]");
-        valoresAñadidosDisplay.setText(valoresArray.toString());
+        valuesArray.append("]");
+        valuesDisplay.setText(valuesArray.toString());
     });
 
-    limpiarBtn.addActionListener(e -> {
-        for (JTextField field : ventasFields) {
+    clearBtn.addActionListener(e -> {
+        for (JTextField field : salesFields) {
             field.setText("");
         }
-        valoresAñadidosDisplay.setText("[]");
+        valuesDisplay.setText("[]");
     });
 
-    aleatorioBtn.addActionListener(e -> {
+    randomBtn.addActionListener(e -> {
         Random rand = new Random();
-        for (int i = 0; i < ventasFields.length; i++) {
-            if (ventasFields[i].getText().isEmpty()) {
-                ventasFields[i].setText(String.valueOf(rand.nextInt(5000)));
+        for (int i = 0; i < salesFields.length; i++) {
+            if (salesFields[i].getText().isEmpty()) {
+                salesFields[i].setText(String.valueOf(rand.nextInt(5000)));
             }
         }
     });
 
     // Agregar todo a `jPanel_app`
-    jPanel_app.add(valoresPanel, BorderLayout.NORTH);
-    jPanel_app.add(panelInferior, BorderLayout.CENTER);
-    jPanel_app.add(panelBotones, BorderLayout.SOUTH);
+    jPanel_app.add(valuesPanel, BorderLayout.NORTH);
+    jPanel_app.add(inputPanel, BorderLayout.CENTER);
+    jPanel_app.add(panelButtons, BorderLayout.SOUTH);
 
     /* Refrescar la vista
     jPanel_app.revalidate();
     jPanel_app.repaint();*/
 }
+
+
+
 
 
 

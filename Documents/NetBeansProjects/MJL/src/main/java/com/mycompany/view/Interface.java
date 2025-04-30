@@ -11,6 +11,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 import javax.swing.BorderFactory;
@@ -253,15 +254,24 @@ public class Interface extends javax.swing.JFrame {
 
     JTextField[] salesFields = new JTextField[8];
     double[] sales = new double[8];
+    for (int i = 0; i < sales.length; i++) {
+    sales[i] = 0.00; // Inicializa cada posición con 0.00
+    }
+   
 
     for (int i = 0; i < salesFields.length; i++) {
     JLabel salesLabel = new JLabel("Venta " + (i + 1) + ":");
-    salesLabel.setOpaque(false);
-    
-    salesFields[i] = new JTextField(4); 
+    salesLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+    salesFields[i] = new JTextField(String.format("%.2f", sales[i]), 6); // Muestra el valor en el campo
+    JLabel euroLabel = new JLabel("€");
+
     inputPanel.add(salesLabel);
     inputPanel.add(salesFields[i]);
-}
+    inputPanel.add(euroLabel);
+    }
+
+
 
 
     /* --------------- SECCIÓN INFERIOR: BOTONES DE ACCIÓN --------------- */
@@ -269,7 +279,7 @@ public class Interface extends javax.swing.JFrame {
     panelButtons.setOpaque(false);
     panelButtons.setPreferredSize(new Dimension(valuesPanel.getWidth(), 70));
     JButton submitBtn = new JButton("Enviar");
-    JButton clearBtn = new JButton("Limpiar");
+    JButton clearBtn = new JButton("Reiniciar");
     JButton randomBtn = new JButton("Valores aleatorios");
     panelButtons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20)); // Centra los botones
 
@@ -282,12 +292,10 @@ public class Interface extends javax.swing.JFrame {
     submitBtn.addActionListener(e -> {
         StringBuilder valuesArray = new StringBuilder("[ ");
         for (int i = 0; i < salesFields.length; i++) {
-            try {
-                sales[i] = Double.parseDouble(salesFields[i].getText());
-                valuesArray.append(sales[i]).append(" ");
-            } catch (NumberFormatException ex) {
-                valuesArray.append("X "); // Representa valores inválidos
-            }
+          
+            sales[i] = Double.parseDouble(salesFields[i].getText());
+            valuesArray.append(sales[i]).append(" ");
+           
         }
         valuesArray.append("]");
         valuesDisplay.setText(valuesArray.toString());

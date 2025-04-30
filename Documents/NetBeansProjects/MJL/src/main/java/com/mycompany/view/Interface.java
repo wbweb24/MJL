@@ -13,9 +13,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Map;
 import java.util.Random;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -177,32 +179,90 @@ public class Interface extends javax.swing.JFrame {
     JLabel valuesDisplay = new JLabel("[]");
     valuesDisplay.setFont(new Font("Arial", Font.BOLD, 22)); 
     valuesDisplay.setForeground(new Color(255, 140, 0)); 
+    
+    JLabel limitLabel = new JLabel("Introduzca la cantidad límite:");
+    limitLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
+    limitLabel.setForeground(new Color(255, 140, 0)); 
+    
+    JTextField limitField = new JTextField(6);
 
+    JLabel filterLabel = new JLabel("Seleccione muestra:");
+    filterLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
+    filterLabel.setForeground(new Color(255, 140, 0)); 
+    
+    String[] filterOptions = {"Superiores", "Superiores e Iguales", "Iguales", "Iguales e Inferiores", "Inferiores"};
+    JComboBox<String> conditionDropdown = new JComboBox<>(filterOptions);
+    conditionDropdown.setForeground(new Color(255, 140, 0));
+    
+    
+    
+    JButton resultBtn = new JButton("Mostrar");
+    JLabel resultLabel = new JLabel();
+    
     
     JPanel valuesPanel = new JPanel();
     valuesPanel.setLayout(new BoxLayout(valuesPanel, BoxLayout.Y_AXIS));
-    valuesPanel.setPreferredSize(new Dimension(valuesPanel.getWidth(), 120));
-    valuesPanel.setOpaque(false); // Hace el panel transparente
-    valuesPanel.add(titleLabel);
-    valuesPanel.add(valuesDisplay);
+    valuesPanel.setOpaque(false);
+    
+    
+    JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    titlePanel.setOpaque(false);
+    JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    filterPanel.setOpaque(false);
+    JPanel resultPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    resultPanel.setOpaque(false);
+    
+    titlePanel.add(titleLabel);
+    titlePanel.add(valuesDisplay);
 
-     /* --------------- SECCIÓN CENTRAL: CAMPOS DE ENTRADA DE DATOS --------------- */
+    filterPanel.add(limitLabel);
+    filterPanel.add(limitField);
+    filterPanel.add(filterLabel);
+    filterPanel.add(conditionDropdown);
+
+    resultPanel.add(resultBtn);
+    resultPanel.add(resultLabel);
+    
+    
+    valuesPanel.add(titlePanel);
+    valuesPanel.add(filterPanel);
+    valuesPanel.add(resultPanel);
+    
+    
+    
+    
+    
+    
+
+    /* --------------- SECCIÓN CENTRAL: CAMPOS DE ENTRADA DE DATOS --------------- */
     JPanel inputPanel = new JPanel(new GridLayout(4, 2, 5, 5));
     inputPanel.setOpaque(false);
-    
+
+    JPanel iPLeft = new JPanel();
+    iPLeft.setPreferredSize(new Dimension(50, 100));
+    iPLeft.setOpaque(false);
+
+    JPanel iPRight = new JPanel();
+    iPRight.setPreferredSize(new Dimension(50, 100));
+    iPRight.setOpaque(false);
+
+
+
+
+    inputPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Intenta centrarlo dentro del layout
+
     JTextField[] salesFields = new JTextField[8];
     double[] sales = new double[8];
 
     for (int i = 0; i < salesFields.length; i++) {
-        JLabel salesLabel = new JLabel("Venta " + (i + 1) + ":");
-        salesLabel.setOpaque(false);
-        
-        
+    JLabel salesLabel = new JLabel("Venta " + (i + 1) + ":");
+    salesLabel.setOpaque(false);
+    
+    salesFields[i] = new JTextField(4); 
+    inputPanel.add(salesLabel);
+    inputPanel.add(salesFields[i]);
+}
 
-        salesFields[i] = new JTextField(4); 
-        inputPanel.add(salesLabel);
-        inputPanel.add(salesFields[i]);
-    }
 
     /* --------------- SECCIÓN INFERIOR: BOTONES DE ACCIÓN --------------- */
     JPanel panelButtons = new JPanel();
@@ -218,7 +278,7 @@ public class Interface extends javax.swing.JFrame {
     panelButtons.add(clearBtn);
     panelButtons.add(randomBtn);
 
-    /* --------------- FUNCIONALIDAD DE LOS BOTONES --------------- */
+    /* --------------- FUNCIONALIDAD DE LOS BOTONES DE ACCIÓN --------------- */
     submitBtn.addActionListener(e -> {
         StringBuilder valuesArray = new StringBuilder("[ ");
         for (int i = 0; i < salesFields.length; i++) {
@@ -248,10 +308,47 @@ public class Interface extends javax.swing.JFrame {
             }
         }
     });
+    
+    /* --------------- FUNCIONALIDAD DEl BOTÓN DE RESULTADO --------------- */
+    resultBtn.addActionListener(e -> {
+    String input = limitField.getText().trim();
+    if (!input.matches("\\d+(\\.\\d+)?")) {
+        resultLabel.setText("Introduce una cantidad válida.");
+        return;
+    }
+
+    double limit = Double.parseDouble(input);
+    String condition = (String) conditionDropdown.getSelectedItem();
+    StringBuilder filteredSales = new StringBuilder("<html>");
+
+    for (int i = 0; i < sales.length; i++) {
+        boolean matchesCondition = switch (condition) {
+            case "Superiores" -> sales[i] > limit;
+            case "Superiores e Iguales" -> sales[i] >= limit;
+            case "Iguales" -> sales[i] == limit;
+            case "Iguales e Inferiores" -> sales[i] <= limit;
+            case "Inferiores" -> sales[i] < limit;
+            default -> false;
+        };
+
+        if (matchesCondition) {
+            filteredSales.append("Venta ").append(i + 1).append(": ").append(sales[i]).append("<br>");
+        }
+    }
+
+    filteredSales.append("</html>");
+    resultLabel.setText(filteredSales.toString());
+});
+
+    
+    
+    
 
     // Agregar todo a `jPanel_app`
-    jPanel_app.add(valuesPanel, BorderLayout.NORTH);
+    jPanel_app.add(valuesPanel, BorderLayout.NORTH);    
     jPanel_app.add(inputPanel, BorderLayout.CENTER);
+    jPanel_app.add(iPLeft, BorderLayout.WEST);
+    jPanel_app.add(iPRight, BorderLayout.EAST);
     jPanel_app.add(panelButtons, BorderLayout.SOUTH);
 
     /* Refrescar la vista

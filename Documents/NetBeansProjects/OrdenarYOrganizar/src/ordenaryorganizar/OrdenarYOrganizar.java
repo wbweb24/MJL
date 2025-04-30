@@ -1,5 +1,3 @@
-
-
 package ordenaryorganizar;
 
 import java.util.ArrayList;

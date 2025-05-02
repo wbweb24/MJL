@@ -11,10 +11,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -172,12 +170,12 @@ public class Interface extends javax.swing.JFrame {
     jPanel_app.setLayout(new BorderLayout());
 
    /* --------------- SECCIÓN SUPERIOR: TÍTULO Y ÁREA DE VISUALIZACIÓN --------------- */
-    JLabel titleLabel = new JLabel("Valores añadidos al Arreglo:");
+    /*JLabel titleLabel = new JLabel("Valores añadidos al Arreglo:");
     titleLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
-    titleLabel.setForeground(new Color(255, 140, 0)); 
+    titleLabel.setForeground(new Color(255, 140, 0)); */
 
     
-    JLabel valuesDisplay = new JLabel("[]");
+    JLabel valuesDisplay = new JLabel();
     valuesDisplay.setFont(new Font("Arial", Font.BOLD, 22)); 
     valuesDisplay.setForeground(new Color(255, 140, 0)); 
     
@@ -191,7 +189,7 @@ public class Interface extends javax.swing.JFrame {
     filterLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
     filterLabel.setForeground(new Color(255, 140, 0)); 
     
-    String[] filterOptions = {"Superiores", "Superiores e Iguales", "Iguales", "Iguales e Inferiores", "Inferiores"};
+    String[] filterOptions = {"Todos", "Superiores", "Superiores e Iguales", "Iguales", "Iguales e Inferiores", "Inferiores"};
     JComboBox<String> conditionDropdown = new JComboBox<>(filterOptions);
     conditionDropdown.setForeground(new Color(255, 140, 0));
     
@@ -213,7 +211,7 @@ public class Interface extends javax.swing.JFrame {
     JPanel resultPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     resultPanel.setOpaque(false);
     
-    titlePanel.add(titleLabel);
+    /*titlePanel.add(titleLabel);*/
     titlePanel.add(valuesDisplay);
 
     filterPanel.add(limitLabel);
@@ -252,24 +250,31 @@ public class Interface extends javax.swing.JFrame {
 
     inputPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Intenta centrarlo dentro del layout
 
-    JTextField[] salesFields = new JTextField[8];
-    double[] sales = new double[8];
+    // Declaración del array de ventas
+    double[] sales = new double[8]; 
+
+// Panel de entrada con disposición más eficiente
+
+// Creación de los componentes dentro del bucle
     for (int i = 0; i < sales.length; i++) {
-    sales[i] = 0.00; // Inicializa cada posición con 0.00
+        sales[i] = 0.00; // Inicializamos cada posición con 0.00
+
+        // Se crea una etiqueta con el número de la venta
+        JLabel salesLabel = new JLabel("Venta " + (i + 1) + ":");
+        salesLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        // Se crea el campo de texto con el valor inicial
+        JTextField salesField = new JTextField(String.format("%.2f", sales[i]), 12);
+
+        // Se crea la etiqueta del símbolo de moneda
+        JLabel euroLabel = new JLabel("€");
+
+        // Se agregan los elementos al panel de entrada
+        inputPanel.add(salesLabel);
+        inputPanel.add(salesField);
+        inputPanel.add(euroLabel);
     }
-   
 
-    for (int i = 0; i < salesFields.length; i++) {
-    JLabel salesLabel = new JLabel("Venta " + (i + 1) + ":");
-    salesLabel.setFont(new Font("Arial", Font.BOLD, 18));
-
-    salesFields[i] = new JTextField(String.format("%.2f", sales[i]), 6); // Muestra el valor en el campo
-    JLabel euroLabel = new JLabel("€");
-
-    inputPanel.add(salesLabel);
-    inputPanel.add(salesFields[i]);
-    inputPanel.add(euroLabel);
-    }
 
 
 
@@ -288,33 +293,42 @@ public class Interface extends javax.swing.JFrame {
     panelButtons.add(clearBtn);
     panelButtons.add(randomBtn);
 
-    /* --------------- FUNCIONALIDAD DE LOS BOTONES DE ACCIÓN --------------- */
+    /* --------------- FUNCIONALIDAD DE LOS BOTONES DE ACCIÓN ---------------*/
     submitBtn.addActionListener(e -> {
-        StringBuilder valuesArray = new StringBuilder("[ ");
-        for (int i = 0; i < salesFields.length; i++) {
+        
+        for (int i = 0; i < sales.length; i++) {
           
-            sales[i] = Double.parseDouble(salesFields[i].getText());
-            valuesArray.append(sales[i]).append(" ");
-           
+            sales[i] = Double.parseDouble(((JTextField) inputPanel.getComponent(i * 3 + 1)).getText());
         }
-        valuesArray.append("]");
-        valuesDisplay.setText(valuesArray.toString());
+    
+    
+    
     });
 
     clearBtn.addActionListener(e -> {
-        for (JTextField field : salesFields) {
-            field.setText("");
+        for (int i = 0; i < sales.length; i++) {
+            sales[i] = 0.00;
+            ((JTextField) inputPanel.getComponent(i * 3+1)).setText("0,00");
         }
-        valuesDisplay.setText("[]");
+            /*valuesDisplay.setText("[]");   DECIDIR
+            Como cada fila tiene tres componentes, para acceder a los JTextField, necesitamos calcular su índice en el GridLayout:
+
+En la primera fila (i = 0), el JTextField está en el índice 0 * 3 + 1 = 1.
+
+En la segunda fila (i = 1), el JTextField está en el índice 1 * 3 + 1 = 4.
+
+En la tercera fila (i = 2), el JTextField está en el índice 2 * 3 + 1 = 7.
+        
     });
 
     randomBtn.addActionListener(e -> {
         Random rand = new Random();
-        for (int i = 0; i < salesFields.length; i++) {
-            if (salesFields[i].getText().isEmpty()) {
-                salesFields[i].setText(String.valueOf(rand.nextInt(5000)));
+        for (int i = 0; i < sales.length; i++) {
+            if (sales[i].getText().isEmpty() || sales[i].getText(equals(0,)) {
+                sales[i].setText(String.valueOf(rand.nextInt(5000)));
             }
-        }
+        }*/
+    
     });
     
     /* --------------- FUNCIONALIDAD DEl BOTÓN DE RESULTADO --------------- */

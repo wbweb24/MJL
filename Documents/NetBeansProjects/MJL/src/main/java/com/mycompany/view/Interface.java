@@ -12,7 +12,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Map;
-import java.util.Random;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -22,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.util.Random;
+
 
  
 
@@ -164,27 +165,20 @@ public class Interface extends javax.swing.JFrame {
     return newIndex;
 }
     
+    
+    
     public void executeMiniApp() {
     
     jPanel_app.removeAll();
     jPanel_app.setLayout(new BorderLayout());
 
    /* --------------- SECCIÓN SUPERIOR: TÍTULO Y ÁREA DE VISUALIZACIÓN --------------- */
-    /*JLabel titleLabel = new JLabel("Valores añadidos al Arreglo:");
-    titleLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
-    titleLabel.setForeground(new Color(255, 140, 0)); */
-
     
     JLabel valuesDisplay = new JLabel();
     valuesDisplay.setFont(new Font("Arial", Font.BOLD, 22)); 
     valuesDisplay.setForeground(new Color(255, 140, 0)); 
     
-    JLabel limitLabel = new JLabel("Introduzca la cantidad límite:");
-    limitLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
-    limitLabel.setForeground(new Color(255, 140, 0)); 
     
-    JTextField limitField = new JTextField(6);
-
     JLabel filterLabel = new JLabel("Seleccione muestra:");
     filterLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
     filterLabel.setForeground(new Color(255, 140, 0)); 
@@ -193,7 +187,12 @@ public class Interface extends javax.swing.JFrame {
     JComboBox<String> conditionDropdown = new JComboBox<>(filterOptions);
     conditionDropdown.setForeground(new Color(255, 140, 0));
     
+    JLabel limitLabel = new JLabel("Introduzca la cantidad límite:");
+    limitLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
+    limitLabel.setForeground(new Color(255, 140, 0)); 
     
+    JTextField limitField = new JTextField(6);
+
     
     JButton resultBtn = new JButton("Mostrar");
     JLabel resultLabel = new JLabel();
@@ -214,11 +213,13 @@ public class Interface extends javax.swing.JFrame {
     /*titlePanel.add(titleLabel);*/
     titlePanel.add(valuesDisplay);
 
-    filterPanel.add(limitLabel);
-    filterPanel.add(limitField);
+    
     filterPanel.add(filterLabel);
     filterPanel.add(conditionDropdown);
 
+    filterPanel.add(limitLabel);
+    filterPanel.add(limitField);
+    
     resultPanel.add(resultBtn);
     resultPanel.add(resultLabel);
     
@@ -283,9 +284,11 @@ public class Interface extends javax.swing.JFrame {
     JPanel panelButtons = new JPanel();
     panelButtons.setOpaque(false);
     panelButtons.setPreferredSize(new Dimension(valuesPanel.getWidth(), 70));
+   
     JButton submitBtn = new JButton("Enviar");
     JButton clearBtn = new JButton("Reiniciar");
-    JButton randomBtn = new JButton("Valores aleatorios");
+    JButton randomBtn = new JButton("Rellenar y enviar");
+    
     panelButtons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20)); // Centra los botones
 
 
@@ -310,6 +313,9 @@ public class Interface extends javax.swing.JFrame {
             sales[i] = 0.00;
             ((JTextField) inputPanel.getComponent(i * 3+1)).setText("0,00");
         }
+            
+            
+    });
             /*valuesDisplay.setText("[]");   DECIDIR
             Como cada fila tiene tres componentes, para acceder a los JTextField, necesitamos calcular su índice en el GridLayout:
 
@@ -317,19 +323,18 @@ En la primera fila (i = 0), el JTextField está en el índice 0 * 3 + 1 = 1.
 
 En la segunda fila (i = 1), el JTextField está en el índice 1 * 3 + 1 = 4.
 
-En la tercera fila (i = 2), el JTextField está en el índice 2 * 3 + 1 = 7.
+En la tercera fila (i = 2), el JTextField está en el índice 2 * 3 + 1 = 7.*/
         
+    randomBtn.addActionListener(e ->{
+        Random rand = new Random();
+        for (int i = 0; i < 8; i++){
+            double randomValue = rand.nextDouble() * 99999;
+            sales[i] = randomValue;
+            ((JTextField) inputPanel.getComponent(i * 3 + 1)).setText(String.format("%.2f", randomValue));
+        }
     });
 
-    randomBtn.addActionListener(e -> {
-        Random rand = new Random();
-        for (int i = 0; i < sales.length; i++) {
-            if (sales[i].getText().isEmpty() || sales[i].getText(equals(0,)) {
-                sales[i].setText(String.valueOf(rand.nextInt(5000)));
-            }
-        }*/
-    
-    });
+
     
     /* --------------- FUNCIONALIDAD DEl BOTÓN DE RESULTADO --------------- */
     resultBtn.addActionListener(e -> {

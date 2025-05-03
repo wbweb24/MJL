@@ -22,6 +22,12 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.util.Random;
+import java.text.NumberFormat;
+import java.util.Locale;
+import javax.swing.JFormattedTextField;
+import javax.swing.text.NumberFormatter;
+
+
 
 
  
@@ -169,8 +175,13 @@ public class Interface extends javax.swing.JFrame {
     
     public void executeMiniApp() {
     
+        
     jPanel_app.removeAll();
     jPanel_app.setLayout(new BorderLayout());
+    
+    NumberFormat euroFormat = NumberFormat.getInstance(Locale.GERMANY);
+    NumberFormatter euroFormatter = new NumberFormatter(euroFormat);
+    euroFormatter.setAllowsInvalid(false);
 
    /* --------------- SECCIÓN SUPERIOR: TÍTULO Y ÁREA DE VISUALIZACIÓN --------------- */
     
@@ -254,23 +265,18 @@ public class Interface extends javax.swing.JFrame {
     // Declaración del array de ventas
     double[] sales = new double[8]; 
 
-// Panel de entrada con disposición más eficiente
-
-// Creación de los componentes dentro del bucle
     for (int i = 0; i < sales.length; i++) {
-        sales[i] = 0.00; // Inicializamos cada posición con 0.00
-
-        // Se crea una etiqueta con el número de la venta
+        sales[i] = 0.00; 
+        
         JLabel salesLabel = new JLabel("Venta " + (i + 1) + ":");
         salesLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
-        // Se crea el campo de texto con el valor inicial
-        JTextField salesField = new JTextField(String.format("%.2f", sales[i]), 12);
-
-        // Se crea la etiqueta del símbolo de moneda
+        JFormattedTextField salesField = new JFormattedTextField(euroFormatter);
+        salesField.setColumns(18);
+        salesField.setValue(sales[i]);
+        
         JLabel euroLabel = new JLabel("€");
 
-        // Se agregan los elementos al panel de entrada
         inputPanel.add(salesLabel);
         inputPanel.add(salesField);
         inputPanel.add(euroLabel);
@@ -300,7 +306,7 @@ public class Interface extends javax.swing.JFrame {
     submitBtn.addActionListener(e -> {
         
         for (int i = 0; i < sales.length; i++) {
-          
+            
             sales[i] = Double.parseDouble(((JTextField) inputPanel.getComponent(i * 3 + 1)).getText());
         }
     
@@ -330,7 +336,7 @@ En la tercera fila (i = 2), el JTextField está en el índice 2 * 3 + 1 = 7.*/
         for (int i = 0; i < 8; i++){
             double randomValue = rand.nextDouble() * 99999;
             sales[i] = randomValue;
-            ((JTextField) inputPanel.getComponent(i * 3 + 1)).setText(String.format("%.2f", randomValue));
+            ((JTextField) inputPanel.getComponent(i * 3 + 1)).setText(String.format("%.2f", randomValue).replace("","."));
         }
     });
 

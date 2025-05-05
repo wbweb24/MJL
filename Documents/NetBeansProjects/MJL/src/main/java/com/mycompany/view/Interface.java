@@ -182,6 +182,7 @@ public class Interface extends javax.swing.JFrame {
     NumberFormat euroFormat = NumberFormat.getInstance(Locale.GERMANY);
     NumberFormatter euroFormatter = new NumberFormatter(euroFormat);
     euroFormatter.setAllowsInvalid(false);
+    
 
    /* --------------- SECCIÓN SUPERIOR: TÍTULO Y ÁREA DE VISUALIZACIÓN --------------- */
     
@@ -273,13 +274,18 @@ public class Interface extends javax.swing.JFrame {
 
         JFormattedTextField salesField = new JFormattedTextField(euroFormatter);
         salesField.setColumns(18);
-        salesField.setValue(sales[i]);
+        salesField.setValue(sales[i]);//88888888888888888888888888888888888888888888888888888888888888888
+        
+        
+        
         
         JLabel euroLabel = new JLabel("€");
 
+        
         inputPanel.add(salesLabel);
         inputPanel.add(salesField);
         inputPanel.add(euroLabel);
+        
     }
 
 
@@ -331,15 +337,18 @@ En la segunda fila (i = 1), el JTextField está en el índice 1 * 3 + 1 = 4.
 
 En la tercera fila (i = 2), el JTextField está en el índice 2 * 3 + 1 = 7.*/
         
-    randomBtn.addActionListener(e ->{
-        Random rand = new Random();
-        for (int i = 0; i < 8; i++){
-            double randomValue = rand.nextDouble() * 99999;
-            sales[i] = randomValue;
-            ((JTextField) inputPanel.getComponent(i * 3 + 1)).setText(String.format("%.2f", randomValue).replace("","."));
-        }
-    });
-
+    randomBtn.addActionListener(e -> {
+    Random rand = new Random();
+    for (int i = 0; i < sales.length; i++) {
+        double randomValue = rand.nextDouble() * 99999;  // Generar número aleatorio
+        sales[i] = Math.round(randomValue * 100.0) / 100.0;  // Redondear a dos decimales
+        
+        JFormattedTextField field = (JFormattedTextField) inputPanel.getComponent(i * 3 + 1);
+        field.setText(String.format("%.2f", sales[i]));  // Mostrar con dos decimales
+        field.setValue(sales[i]);  // Asignar el valor redondeado
+        field.postActionEvent();  // Forzar la actualización inmediata
+    }
+});
 
     
     /* --------------- FUNCIONALIDAD DEl BOTÓN DE RESULTADO --------------- */

@@ -171,26 +171,26 @@ public class Interface extends javax.swing.JFrame {
     return newIndex;
 }
     
-    
+    ////////////////////////////////////////////////////////////////////////////MiniApp
     
     public void executeMiniApp() {
     
-        
+     //Limpieza y layout   
     jPanel_app.removeAll();
     jPanel_app.setLayout(new BorderLayout());
     
+    
+    //Formato monedas
     NumberFormat euroFormat = NumberFormat.getInstance(Locale.GERMANY);
     NumberFormatter euroFormatter = new NumberFormatter(euroFormat);
     euroFormatter.setAllowsInvalid(false);
     
 
-   /* --------------- SECCIÓN SUPERIOR: TÍTULO Y ÁREA DE VISUALIZACIÓN --------------- */
-    
-    JLabel valuesDisplay = new JLabel();
-    valuesDisplay.setFont(new Font("Arial", Font.BOLD, 22)); 
-    valuesDisplay.setForeground(new Color(255, 140, 0)); 
+   /* ---------------                                                           SECCIÓN SUPERIOR: FILTRO  --------------- */
     
     
+    ///////////////////////////////////////////////////////////////////FILTRO
+    ///CONDICION
     JLabel filterLabel = new JLabel("Seleccione muestra:");
     filterLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
     filterLabel.setForeground(new Color(255, 140, 0)); 
@@ -198,45 +198,33 @@ public class Interface extends javax.swing.JFrame {
     String[] filterOptions = {"Todos", "Superiores", "Superiores e Iguales", "Iguales", "Iguales e Inferiores", "Inferiores"};
     JComboBox<String> conditionDropdown = new JComboBox<>(filterOptions);
     conditionDropdown.setForeground(new Color(255, 140, 0));
-    
+    ///LÍMITE
     JLabel limitLabel = new JLabel("Introduzca la cantidad límite:");
     limitLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
     limitLabel.setForeground(new Color(255, 140, 0)); 
-    
     JTextField limitField = new JTextField(6);
-
-    
+    ///RESULTADO
     JButton resultBtn = new JButton("Mostrar");
     JLabel resultLabel = new JLabel();
+    //////////////////////////////////////////////////////////////////////////
+    //PANELES FILTRO Y CONTENEDOR
+    JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    filterPanel.setOpaque(false);
+    filterPanel.add(filterLabel);
+    filterPanel.add(conditionDropdown);
+    filterPanel.add(limitLabel);
+    filterPanel.add(limitField);
     
+    JPanel resultPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    resultPanel.setOpaque(false);
+    resultPanel.add(resultBtn);
+    resultPanel.add(resultLabel);
+    resultPanel.add(resultBtn);
+    resultPanel.add(resultLabel);
     
     JPanel valuesPanel = new JPanel();
     valuesPanel.setLayout(new BoxLayout(valuesPanel, BoxLayout.Y_AXIS));
     valuesPanel.setOpaque(false);
-    
-    
-    JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    titlePanel.setOpaque(false);
-    JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    filterPanel.setOpaque(false);
-    JPanel resultPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    resultPanel.setOpaque(false);
-    
-    /*titlePanel.add(titleLabel);*/
-    titlePanel.add(valuesDisplay);
-
-    
-    filterPanel.add(filterLabel);
-    filterPanel.add(conditionDropdown);
-
-    filterPanel.add(limitLabel);
-    filterPanel.add(limitField);
-    
-    resultPanel.add(resultBtn);
-    resultPanel.add(resultLabel);
-    
-    
-    valuesPanel.add(titlePanel);
     valuesPanel.add(filterPanel);
     valuesPanel.add(resultPanel);
     
@@ -246,7 +234,9 @@ public class Interface extends javax.swing.JFrame {
     
     
 
-    /* --------------- SECCIÓN CENTRAL: CAMPOS DE ENTRADA DE DATOS --------------- */
+    /* ---------------                                      SECCIÓN CENTRAL: CAMPOS DE ENTRADA DE DATOS --------------- */
+    
+    ///////////////////////////////////////////////////////////////////////////////Distribución estética
     JPanel inputPanel = new JPanel(new GridLayout(4, 2, 5, 5));
     inputPanel.setOpaque(false);
 
@@ -257,31 +247,57 @@ public class Interface extends javax.swing.JFrame {
     JPanel iPRight = new JPanel();
     iPRight.setPreferredSize(new Dimension(50, 100));
     iPRight.setOpaque(false);
+/*
 
+    DECIDIENDO FILEDS YA FORMATEADOS O FORMATEO A POSTERIORI
+    
+    
+public JFormattedTextField createCurrencyField() {
+    NumberFormat euroFormat = NumberFormat.getInstance(Locale.GERMANY);
+    NumberFormatter euroFormatter = new NumberFormatter(euroFormat);
+    euroFormatter.setAllowsInvalid(false);
+    euroFormatter.setCommitsOnValidEdit(true);
 
+    JFormattedTextField field = new JFormattedTextField(euroFormatter);
+    field.setColumns(18);
+    field.setValue(0.00);  // Inicializar el campo con 0
+    return field;
+}
 
+JFormattedTextField salesField = createCurrencyField();
+**********************************************************************************************
+public void applyEuroFormat(JFormattedTextField field) {
+    NumberFormat euroFormat = NumberFormat.getInstance(Locale.GERMANY);
+    NumberFormatter euroFormatter = new NumberFormatter(euroFormat);
+    euroFormatter.setAllowsInvalid(false);
+    euroFormatter.setCommitsOnValidEdit(true);
 
-    inputPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Intenta centrarlo dentro del layout
+    field.setFormatterFactory(new DefaultFormatterFactory(euroFormatter)); // Aplicar formato
+    field.setColumns(18);
+    field.setValue(0.00);  // Inicializa el campo con 0
+}
 
-    // Declaración del array de ventas
+    applyEuroFormat(existingField);
+
+    
+
+    */
     double[] sales = new double[8]; 
 
+    JFormattedTextField salesField = new JFormattedTextField(euroFormatter);
+    
     for (int i = 0; i < sales.length; i++) {
-        sales[i] = 0.00; 
+        sales[i] = 0.00; //inicialización
         
-        JLabel salesLabel = new JLabel("Venta " + (i + 1) + ":");
+        JLabel salesLabel = new JLabel("Venta " + (i + 1) + ":");//etiquetas
         salesLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
-        JFormattedTextField salesField = new JFormattedTextField(euroFormatter);
+        //Fields con formato euro
         salesField.setColumns(18);
-        salesField.setValue(sales[i]);//88888888888888888888888888888888888888888888888888888888888888888
-        
-        
-        
+        salesField.setValue(sales[i]);//Escribe valor de sales en salesfield
         
         JLabel euroLabel = new JLabel("€");
 
-        
         inputPanel.add(salesLabel);
         inputPanel.add(salesField);
         inputPanel.add(euroLabel);
@@ -292,7 +308,7 @@ public class Interface extends javax.swing.JFrame {
 
 
 
-    /* --------------- SECCIÓN INFERIOR: BOTONES DE ACCIÓN --------------- */
+    /* ---------------                                                          SECCIÓN INFERIOR: BOTONES DE ACCIÓN --------------- */
     JPanel panelButtons = new JPanel();
     panelButtons.setOpaque(false);
     panelButtons.setPreferredSize(new Dimension(valuesPanel.getWidth(), 70));
@@ -325,28 +341,21 @@ public class Interface extends javax.swing.JFrame {
             sales[i] = 0.00;
             ((JTextField) inputPanel.getComponent(i * 3+1)).setText("0,00");
         }
-            
-            
     });
-            /*valuesDisplay.setText("[]");   DECIDIR
-            Como cada fila tiene tres componentes, para acceder a los JTextField, necesitamos calcular su índice en el GridLayout:
 
-En la primera fila (i = 0), el JTextField está en el índice 0 * 3 + 1 = 1.
-
-En la segunda fila (i = 1), el JTextField está en el índice 1 * 3 + 1 = 4.
-
-En la tercera fila (i = 2), el JTextField está en el índice 2 * 3 + 1 = 7.*/
         
     randomBtn.addActionListener(e -> {
     Random rand = new Random();
     for (int i = 0; i < sales.length; i++) {
-        double randomValue = rand.nextDouble() * 99999;  // Generar número aleatorio
-        sales[i] = Math.round(randomValue * 100.0) / 100.0;  // Redondear a dos decimales
+        sales[i] = Math.round((rand.nextDouble() * 99999)* 100.0) / 100.0;  // Generar número aleatorio
+       
         
-        JFormattedTextField field = (JFormattedTextField) inputPanel.getComponent(i * 3 + 1);
-        field.setText(String.format("%.2f", sales[i]));  // Mostrar con dos decimales
-        field.setValue(sales[i]);  // Asignar el valor redondeado
-        field.postActionEvent();  // Forzar la actualización inmediata
+        
+        salesField.setValue(sales[i]);/*
+        
+        field.setText(String.format("%.2f", sales[i])); */
+        
+        salesField.postActionEvent();  
     }
 });
 
